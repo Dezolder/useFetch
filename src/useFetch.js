@@ -5,24 +5,17 @@ export const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [params, setParams] = useState({});
 
-  const refetch = async (params = {}) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(url, params);
-      setData(response.data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  const refetch = (params) => {
+    setParams(params)
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (params) => {
       setLoading(true);
       try {
-        const response = await axios.get(url);
+        const response = await axios.get(url, params);
         setData(response.data);
       } catch (err) {
         setError(err.message);
@@ -30,8 +23,8 @@ export const useFetch = (url) => {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [url]);
+    fetchData(params);
+  }, [url, params]);
 
   return { data, isLoading, error, refetch };
 };
